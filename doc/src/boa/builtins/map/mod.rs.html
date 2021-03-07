@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `boa/src/builtins/map/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="https://raw.githubusercontent.com/jasonwilliams/boa/master/assets/logo.svg"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../boa/index.html'><div class='logo-container'><img src='https://raw.githubusercontent.com/jasonwilliams/boa/master/assets/logo.svg' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `boa/src/builtins/map/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="https://raw.githubusercontent.com/jasonwilliams/boa/master/assets/logo.svg"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../boa/index.html'><div class='logo-container'><img src='https://raw.githubusercontent.com/jasonwilliams/boa/master/assets/logo.svg' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+                <a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -311,20 +312,137 @@
 <span id="311">311</span>
 <span id="312">312</span>
 <span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">mutable_key_type</span>)]</span>
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">function</span>::{<span class="ident">make_builtin_fn</span>, <span class="ident">make_constructor_fn</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">builtins</span>::{
-        <span class="ident">object</span>::{<span class="ident">ObjectData</span>, <span class="ident">PROTOTYPE</span>},
-        <span class="ident">property</span>::{<span class="ident">Attribute</span>, <span class="ident">Property</span>},
-        <span class="ident">value</span>::{<span class="ident">ResultValue</span>, <span class="ident">Value</span>},
-    },
-    <span class="ident">exec</span>::<span class="ident">Interpreter</span>,
-    <span class="ident">BoaProfiler</span>,
+    <span class="ident">builtins</span>::<span class="ident">BuiltIn</span>,
+    <span class="ident">object</span>::{<span class="ident">ConstructorBuilder</span>, <span class="ident">FunctionBuilder</span>, <span class="ident">ObjectData</span>, <span class="ident">PROTOTYPE</span>},
+    <span class="ident">property</span>::{<span class="ident">Attribute</span>, <span class="ident">DataDescriptor</span>},
+    <span class="ident">BoaProfiler</span>, <span class="ident">Context</span>, <span class="prelude-ty">Result</span>, <span class="ident">Value</span>,
 };
 <span class="kw">use</span> <span class="ident">ordered_map</span>::<span class="ident">OrderedMap</span>;
+
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">map_iterator</span>;
+<span class="kw">use</span> <span class="ident">map_iterator</span>::{<span class="ident">MapIterationKind</span>, <span class="ident">MapIterator</span>};
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ordered_map</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -333,15 +451,175 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Map</span>(<span class="ident">OrderedMap</span><span class="op">&lt;</span><span class="ident">Value</span>, <span class="ident">Value</span><span class="op">&gt;</span>);
 
-<span class="kw">impl</span> <span class="ident">Map</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;Map&quot;</span>;
+<span class="kw">impl</span> <span class="ident">BuiltIn</span> <span class="kw">for</span> <span class="ident">Map</span> {
+    <span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;Map&quot;</span>;
 
+    <span class="kw">fn</span> <span class="ident">attribute</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Attribute</span> {
+        <span class="ident">Attribute</span>::<span class="ident">WRITABLE</span> <span class="op">|</span> <span class="ident">Attribute</span>::<span class="ident">NON_ENUMERABLE</span> <span class="op">|</span> <span class="ident">Attribute</span>::<span class="ident">CONFIGURABLE</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">init</span>(<span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Value</span>, <span class="ident">Attribute</span>) {
+        <span class="kw">let</span> <span class="ident">_timer</span> <span class="op">=</span> <span class="ident">BoaProfiler</span>::<span class="ident">global</span>().<span class="ident">start_event</span>(<span class="self">Self</span>::<span class="ident">NAME</span>, <span class="string">&quot;init&quot;</span>);
+
+        <span class="kw">let</span> <span class="ident">iterator_symbol</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">well_known_symbols</span>().<span class="ident">iterator_symbol</span>();
+
+        <span class="kw">let</span> <span class="ident">entries_function</span> <span class="op">=</span> <span class="ident">FunctionBuilder</span>::<span class="ident">new</span>(<span class="ident">context</span>, <span class="self">Self</span>::<span class="ident">entries</span>)
+            .<span class="ident">name</span>(<span class="string">&quot;entries&quot;</span>)
+            .<span class="ident">length</span>(<span class="number">0</span>)
+            .<span class="ident">callable</span>(<span class="bool-val">true</span>)
+            .<span class="ident">constructable</span>(<span class="bool-val">false</span>)
+            .<span class="ident">build</span>();
+
+        <span class="kw">let</span> <span class="ident">map_object</span> <span class="op">=</span> <span class="ident">ConstructorBuilder</span>::<span class="ident">new</span>(<span class="ident">context</span>, <span class="self">Self</span>::<span class="ident">constructor</span>)
+            .<span class="ident">name</span>(<span class="self">Self</span>::<span class="ident">NAME</span>)
+            .<span class="ident">length</span>(<span class="self">Self</span>::<span class="ident">LENGTH</span>)
+            .<span class="ident">property</span>(
+                <span class="string">&quot;entries&quot;</span>,
+                <span class="ident">entries_function</span>.<span class="ident">clone</span>(),
+                <span class="ident">Attribute</span>::<span class="ident">WRITABLE</span> <span class="op">|</span> <span class="ident">Attribute</span>::<span class="ident">NON_ENUMERABLE</span> <span class="op">|</span> <span class="ident">Attribute</span>::<span class="ident">CONFIGURABLE</span>,
+            )
+            .<span class="ident">property</span>(
+                <span class="ident">iterator_symbol</span>,
+                <span class="ident">entries_function</span>,
+                <span class="ident">Attribute</span>::<span class="ident">WRITABLE</span> <span class="op">|</span> <span class="ident">Attribute</span>::<span class="ident">NON_ENUMERABLE</span> <span class="op">|</span> <span class="ident">Attribute</span>::<span class="ident">CONFIGURABLE</span>,
+            )
+            .<span class="ident">method</span>(<span class="self">Self</span>::<span class="ident">keys</span>, <span class="string">&quot;keys&quot;</span>, <span class="number">0</span>)
+            .<span class="ident">method</span>(<span class="self">Self</span>::<span class="ident">set</span>, <span class="string">&quot;set&quot;</span>, <span class="number">2</span>)
+            .<span class="ident">method</span>(<span class="self">Self</span>::<span class="ident">delete</span>, <span class="string">&quot;delete&quot;</span>, <span class="number">1</span>)
+            .<span class="ident">method</span>(<span class="self">Self</span>::<span class="ident">get</span>, <span class="string">&quot;get&quot;</span>, <span class="number">1</span>)
+            .<span class="ident">method</span>(<span class="self">Self</span>::<span class="ident">clear</span>, <span class="string">&quot;clear&quot;</span>, <span class="number">0</span>)
+            .<span class="ident">method</span>(<span class="self">Self</span>::<span class="ident">has</span>, <span class="string">&quot;has&quot;</span>, <span class="number">1</span>)
+            .<span class="ident">method</span>(<span class="self">Self</span>::<span class="ident">for_each</span>, <span class="string">&quot;forEach&quot;</span>, <span class="number">1</span>)
+            .<span class="ident">method</span>(<span class="self">Self</span>::<span class="ident">values</span>, <span class="string">&quot;values&quot;</span>, <span class="number">0</span>)
+            .<span class="ident">callable</span>(<span class="bool-val">false</span>)
+            .<span class="ident">build</span>();
+
+        (<span class="self">Self</span>::<span class="ident">NAME</span>, <span class="ident">map_object</span>.<span class="ident">into</span>(), <span class="self">Self</span>::<span class="ident">attribute</span>())
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Map</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">LENGTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1</span>;
+
+    <span class="doccomment">/// Create a new map</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">constructor</span>(
+        <span class="ident">new_target</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>,
+        <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>],
+        <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">new_target</span>.<span class="ident">is_undefined</span>() {
+            <span class="kw">return</span> <span class="ident">context</span>.<span class="ident">throw_type_error</span>(<span class="string">&quot;Map requires new&quot;</span>);
+        }
+        <span class="kw">let</span> <span class="ident">map_prototype</span> <span class="op">=</span> <span class="ident">context</span>
+            .<span class="ident">global_object</span>()
+            .<span class="ident">clone</span>()
+            .<span class="ident">get</span>(
+                <span class="kw-2">&amp;</span><span class="string">&quot;Map&quot;</span>.<span class="ident">into</span>(),
+                <span class="ident">context</span>.<span class="ident">global_object</span>().<span class="ident">clone</span>().<span class="ident">into</span>(),
+                <span class="ident">context</span>,
+            )<span class="question-mark">?</span>
+            .<span class="ident">get_field</span>(<span class="ident">PROTOTYPE</span>, <span class="ident">context</span>)<span class="question-mark">?</span>
+            .<span class="ident">as_object</span>()
+            .<span class="ident">expect</span>(<span class="string">&quot;&#39;Map&#39; global property should be an object&quot;</span>);
+        <span class="kw">let</span> <span class="ident">prototype</span> <span class="op">=</span> <span class="ident">new_target</span>
+            .<span class="ident">as_object</span>()
+            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">obj</span><span class="op">|</span> {
+                <span class="ident">obj</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">PROTOTYPE</span>.<span class="ident">into</span>(), <span class="ident">obj</span>.<span class="ident">clone</span>().<span class="ident">into</span>(), <span class="ident">context</span>)
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>.<span class="ident">as_object</span>())
+                    .<span class="ident">transpose</span>()
+            })
+            .<span class="ident">transpose</span>()<span class="question-mark">?</span>
+            .<span class="ident">unwrap_or</span>(<span class="ident">map_prototype</span>);
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">context</span>.<span class="ident">construct_object</span>();
+        <span class="ident">obj</span>.<span class="ident">set_prototype_instance</span>(<span class="ident">prototype</span>.<span class="ident">into</span>());
+        <span class="kw">let</span> <span class="ident">this</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">from</span>(<span class="ident">obj</span>);
+
+        <span class="comment">// add our arguments in</span>
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">args</span>.<span class="ident">len</span>() {
+            <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">OrderedMap</span>::<span class="ident">new</span>(),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">args</span>[<span class="number">0</span>] {
+                <span class="ident">Value</span>::<span class="ident">Object</span>(<span class="ident">object</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="kw">let</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>.<span class="ident">borrow</span>();
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>) <span class="op">=</span> <span class="ident">object</span>.<span class="ident">as_map_ref</span>().<span class="ident">cloned</span>() {
+                        <span class="ident">map</span>
+                    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">object</span>.<span class="ident">is_array</span>() {
+                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">OrderedMap</span>::<span class="ident">new</span>();
+                        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">args</span>[<span class="number">0</span>].<span class="ident">get_field</span>(<span class="string">&quot;length&quot;</span>, <span class="ident">context</span>)<span class="question-mark">?</span>.<span class="ident">to_integer</span>(<span class="ident">context</span>)<span class="question-mark">?</span> <span class="kw">as</span> <span class="ident">i32</span>;
+                        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">len</span> {
+                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">args</span>[<span class="number">0</span>].<span class="ident">get_field</span>(<span class="ident">i</span>, <span class="ident">context</span>)<span class="question-mark">?</span>;
+                            <span class="kw">let</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="op">=</span>
+                                <span class="self">Self</span>::<span class="ident">get_key_value</span>(<span class="ident">val</span>, <span class="ident">context</span>)<span class="question-mark">?</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+                                    <span class="ident">context</span>.<span class="ident">construct_type_error</span>(
+                                        <span class="string">&quot;iterable for Map should have array-like objects&quot;</span>,
+                                    )
+                                })<span class="question-mark">?</span>;
+                            <span class="ident">map</span>.<span class="ident">insert</span>(<span class="ident">key</span>, <span class="ident">value</span>);
+                        }
+                        <span class="ident">map</span>
+                    } <span class="kw">else</span> {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">context</span>.<span class="ident">construct_type_error</span>(
+                            <span class="string">&quot;iterable for Map should have array-like objects&quot;</span>,
+                        ));
+                    }
+                }
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">context</span>
+                        .<span class="ident">construct_type_error</span>(<span class="string">&quot;iterable for Map should have array-like objects&quot;</span>))
+                }
+            },
+        };
+
+        <span class="comment">// finally create size property</span>
+        <span class="self">Self</span>::<span class="ident">set_size</span>(<span class="kw-2">&amp;</span><span class="ident">this</span>, <span class="ident">data</span>.<span class="ident">len</span>());
+
+        <span class="comment">// This value is used by console.log and other routines to match Object type</span>
+        <span class="comment">// to its Javascript Identifier (global constructor method name)</span>
+        <span class="ident">this</span>.<span class="ident">set_data</span>(<span class="ident">ObjectData</span>::<span class="ident">Map</span>(<span class="ident">data</span>));
+
+        <span class="prelude-val">Ok</span>(<span class="ident">this</span>)
+    }
+
+    <span class="doccomment">/// `Map.prototype.entries()`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns a new Iterator object that contains the [key, value] pairs for each element in the Map object in insertion order.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// More information:</span>
+    <span class="doccomment">///  - [ECMAScript reference][spec]</span>
+    <span class="doccomment">///  - [MDN documentation][mdn]</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [spec]: https://www.ecma-international.org/ecma-262/11.0/index.html#sec-map.prototype.entries</span>
+    <span class="doccomment">/// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/entries</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">entries</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">MapIterator</span>::<span class="ident">create_map_iterator</span>(
+            <span class="ident">context</span>,
+            <span class="ident">this</span>.<span class="ident">clone</span>(),
+            <span class="ident">MapIterationKind</span>::<span class="ident">KeyAndValue</span>,
+        ))
+    }
+
+    <span class="doccomment">/// `Map.prototype.keys()`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns a new Iterator object that contains the keys for each element in the Map object in insertion order.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// More information:</span>
+    <span class="doccomment">///  - [ECMAScript reference][spec]</span>
+    <span class="doccomment">///  - [MDN documentation][mdn]</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [spec]: https://tc39.es/ecma262/#sec-map.prototype.keys</span>
+    <span class="doccomment">/// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/keys</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">keys</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">MapIterator</span>::<span class="ident">create_map_iterator</span>(
+            <span class="ident">context</span>,
+            <span class="ident">this</span>.<span class="ident">clone</span>(),
+            <span class="ident">MapIterationKind</span>::<span class="ident">Key</span>,
+        ))
+    }
 
     <span class="doccomment">/// Helper function to set the size property.</span>
     <span class="kw">fn</span> <span class="ident">set_size</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">size</span>: <span class="ident">usize</span>) {
-        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">Property</span>::<span class="ident">data_descriptor</span>(
-            <span class="ident">size</span>.<span class="ident">into</span>(),
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">DataDescriptor</span>::<span class="ident">new</span>(
+            <span class="ident">size</span>,
             <span class="ident">Attribute</span>::<span class="ident">READONLY</span> <span class="op">|</span> <span class="ident">Attribute</span>::<span class="ident">NON_ENUMERABLE</span> <span class="op">|</span> <span class="ident">Attribute</span>::<span class="ident">PERMANENT</span>,
         );
 
@@ -358,23 +636,22 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [spec]: https://tc39.es/ecma262/#sec-map.prototype.set</span>
     <span class="doccomment">/// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/set</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Interpreter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResultValue</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">args</span>.<span class="ident">len</span>() {
             <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">Value</span>::<span class="ident">Undefined</span>, <span class="ident">Value</span>::<span class="ident">Undefined</span>),
             <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">args</span>[<span class="number">0</span>].<span class="ident">clone</span>(), <span class="ident">Value</span>::<span class="ident">Undefined</span>),
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">args</span>[<span class="number">0</span>].<span class="ident">clone</span>(), <span class="ident">args</span>[<span class="number">1</span>].<span class="ident">clone</span>()),
         };
 
-        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Value</span>::<span class="ident">Object</span>(<span class="kw-2">ref</span> <span class="ident">object</span>) <span class="op">=</span> <span class="ident">this</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>.<span class="ident">borrow_mut</span>();
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>) <span class="op">=</span> <span class="ident">object</span>.<span class="ident">as_map_mut</span>() {
+        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">object</span>) <span class="op">=</span> <span class="ident">this</span>.<span class="ident">as_object</span>() {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>) <span class="op">=</span> <span class="ident">object</span>.<span class="ident">borrow_mut</span>().<span class="ident">as_map_mut</span>() {
                 <span class="ident">map</span>.<span class="ident">insert</span>(<span class="ident">key</span>, <span class="ident">value</span>);
                 <span class="ident">map</span>.<span class="ident">len</span>()
             } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ctx</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">context</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>));
             }
         } <span class="kw">else</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ctx</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">context</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>));
         };
 
         <span class="self">Self</span>::<span class="ident">set_size</span>(<span class="ident">this</span>, <span class="ident">size</span>);
@@ -391,23 +668,22 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [spec]: https://tc39.es/ecma262/#sec-map.prototype.delete</span>
     <span class="doccomment">/// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/delete</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">delete</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Interpreter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResultValue</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">delete</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">undefined</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">Undefined</span>;
         <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">args</span>.<span class="ident">len</span>() {
             <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">undefined</span>,
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">args</span>[<span class="number">0</span>],
         };
 
-        <span class="kw">let</span> (<span class="ident">deleted</span>, <span class="ident">size</span>) <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Value</span>::<span class="ident">Object</span>(<span class="kw-2">ref</span> <span class="ident">object</span>) <span class="op">=</span> <span class="ident">this</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>.<span class="ident">borrow_mut</span>();
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>) <span class="op">=</span> <span class="ident">object</span>.<span class="ident">as_map_mut</span>() {
+        <span class="kw">let</span> (<span class="ident">deleted</span>, <span class="ident">size</span>) <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">object</span>) <span class="op">=</span> <span class="ident">this</span>.<span class="ident">as_object</span>() {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>) <span class="op">=</span> <span class="ident">object</span>.<span class="ident">borrow_mut</span>().<span class="ident">as_map_mut</span>() {
                 <span class="kw">let</span> <span class="ident">deleted</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">remove</span>(<span class="ident">key</span>).<span class="ident">is_some</span>();
                 (<span class="ident">deleted</span>, <span class="ident">map</span>.<span class="ident">len</span>())
             } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ctx</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">context</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>));
             }
         } <span class="kw">else</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ctx</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">context</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>));
         };
         <span class="self">Self</span>::<span class="ident">set_size</span>(<span class="ident">this</span>, <span class="ident">size</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">deleted</span>.<span class="ident">into</span>())
@@ -423,7 +699,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [spec]: https://tc39.es/ecma262/#sec-map.prototype.get</span>
     <span class="doccomment">/// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/get</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Interpreter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResultValue</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">undefined</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">Undefined</span>;
         <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">args</span>.<span class="ident">len</span>() {
             <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">undefined</span>,
@@ -441,7 +717,7 @@
             }
         }
 
-        <span class="prelude-val">Err</span>(<span class="ident">ctx</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>))
+        <span class="prelude-val">Err</span>(<span class="ident">context</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>))
     }
 
     <span class="doccomment">/// `Map.prototype.clear( )`</span>
@@ -454,7 +730,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [spec]: https://tc39.es/ecma262/#sec-map.prototype.clear</span>
     <span class="doccomment">/// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/clear</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">clear</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Interpreter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResultValue</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">clear</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="ident">this</span>.<span class="ident">set_data</span>(<span class="ident">ObjectData</span>::<span class="ident">Map</span>(<span class="ident">OrderedMap</span>::<span class="ident">new</span>()));
 
         <span class="self">Self</span>::<span class="ident">set_size</span>(<span class="ident">this</span>, <span class="number">0</span>);
@@ -472,7 +748,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [spec]: https://tc39.es/ecma262/#sec-map.prototype.has</span>
     <span class="doccomment">/// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/has</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">has</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Interpreter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResultValue</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">has</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">undefined</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">Undefined</span>;
         <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">args</span>.<span class="ident">len</span>() {
             <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">undefined</span>,
@@ -486,7 +762,7 @@
             }
         }
 
-        <span class="prelude-val">Err</span>(<span class="ident">ctx</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>))
+        <span class="prelude-val">Err</span>(<span class="ident">context</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>))
     }
 
     <span class="doccomment">/// `Map.prototype.forEach( callbackFn [ , thisArg ] )`</span>
@@ -499,11 +775,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [spec]: https://tc39.es/ecma262/#sec-map.prototype.foreach</span>
     <span class="doccomment">/// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">for_each</span>(
-        <span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>,
-        <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>],
-        <span class="ident">interpreter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Interpreter</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResultValue</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">for_each</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">args</span>.<span class="ident">is_empty</span>() {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Value</span>::<span class="ident">from</span>(<span class="string">&quot;Missing argument for Map.prototype.forEach&quot;</span>));
         }
@@ -511,118 +783,83 @@
         <span class="kw">let</span> <span class="ident">callback_arg</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">args</span>[<span class="number">0</span>];
         <span class="kw">let</span> <span class="ident">this_arg</span> <span class="op">=</span> <span class="ident">args</span>.<span class="ident">get</span>(<span class="number">1</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or_else</span>(<span class="ident">Value</span>::<span class="ident">undefined</span>);
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Value</span>::<span class="ident">Object</span>(<span class="kw-2">ref</span> <span class="ident">object</span>) <span class="op">=</span> <span class="ident">this</span> {
-            <span class="kw">let</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>.<span class="ident">borrow</span>();
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>) <span class="op">=</span> <span class="ident">object</span>.<span class="ident">as_map_ref</span>().<span class="ident">cloned</span>() {
-                <span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">map</span> {
-                    <span class="kw">let</span> <span class="ident">arguments</span> <span class="op">=</span> [<span class="ident">value</span>, <span class="ident">key</span>, <span class="ident">this</span>.<span class="ident">clone</span>()];
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index</span> <span class="op">=</span> <span class="number">0</span>;
 
-                    <span class="ident">interpreter</span>.<span class="ident">call</span>(<span class="ident">callback_arg</span>, <span class="kw-2">&amp;</span><span class="ident">this_arg</span>, <span class="kw-2">&amp;</span><span class="ident">arguments</span>)<span class="question-mark">?</span>;
+        <span class="kw">while</span> <span class="ident">index</span> <span class="op">&lt;</span> <span class="ident">Map</span>::<span class="ident">get_size</span>(<span class="ident">this</span>, <span class="ident">context</span>)<span class="question-mark">?</span> {
+            <span class="kw">let</span> <span class="ident">arguments</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Value</span>::<span class="ident">Object</span>(<span class="kw-2">ref</span> <span class="ident">object</span>) <span class="op">=</span> <span class="ident">this</span> {
+                <span class="kw">let</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>.<span class="ident">borrow</span>();
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>) <span class="op">=</span> <span class="ident">object</span>.<span class="ident">as_map_ref</span>() {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">key</span>, <span class="ident">value</span>)) <span class="op">=</span> <span class="ident">map</span>.<span class="ident">get_index</span>(<span class="ident">index</span>) {
+                        <span class="prelude-val">Some</span>([<span class="ident">value</span>.<span class="ident">clone</span>(), <span class="ident">key</span>.<span class="ident">clone</span>(), <span class="ident">this</span>.<span class="ident">clone</span>()])
+                    } <span class="kw">else</span> {
+                        <span class="prelude-val">None</span>
+                    }
+                } <span class="kw">else</span> {
+                    <span class="kw">return</span> <span class="ident">context</span>.<span class="ident">throw_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>);
                 }
+            } <span class="kw">else</span> {
+                <span class="kw">return</span> <span class="ident">context</span>.<span class="ident">throw_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>);
+            };
+
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">arguments</span>) <span class="op">=</span> <span class="ident">arguments</span> {
+                <span class="ident">context</span>.<span class="ident">call</span>(<span class="ident">callback_arg</span>, <span class="kw-2">&amp;</span><span class="ident">this_arg</span>, <span class="kw-2">&amp;</span><span class="ident">arguments</span>)<span class="question-mark">?</span>;
             }
+
+            <span class="ident">index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         }
 
         <span class="prelude-val">Ok</span>(<span class="ident">Value</span>::<span class="ident">Undefined</span>)
     }
 
+    <span class="doccomment">/// Helper function to get the size of the map.</span>
+    <span class="kw">fn</span> <span class="ident">get_size</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Value</span>::<span class="ident">Object</span>(<span class="kw-2">ref</span> <span class="ident">object</span>) <span class="op">=</span> <span class="ident">map</span> {
+            <span class="kw">let</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>.<span class="ident">borrow</span>();
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>) <span class="op">=</span> <span class="ident">object</span>.<span class="ident">as_map_ref</span>() {
+                <span class="prelude-val">Ok</span>(<span class="ident">map</span>.<span class="ident">len</span>())
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">context</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>))
+            }
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">context</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;&#39;this&#39; is not a Map&quot;</span>))
+        }
+    }
+
+    <span class="doccomment">/// `Map.prototype.values()`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns a new Iterator object that contains the values for each element in the Map object in insertion order.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// More information:</span>
+    <span class="doccomment">///  - [ECMAScript reference][spec]</span>
+    <span class="doccomment">///  - [MDN documentation][mdn]</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [spec]: https://tc39.es/ecma262/#sec-map.prototype.values</span>
+    <span class="doccomment">/// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/values</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">values</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">MapIterator</span>::<span class="ident">create_map_iterator</span>(
+            <span class="ident">context</span>,
+            <span class="ident">this</span>.<span class="ident">clone</span>(),
+            <span class="ident">MapIterationKind</span>::<span class="ident">Value</span>,
+        ))
+    }
+
     <span class="doccomment">/// Helper function to get a key-value pair from an array.</span>
-    <span class="kw">fn</span> <span class="ident">get_key_value</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Value</span>, <span class="ident">Value</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_key_value</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Value</span>, <span class="ident">Value</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Value</span>::<span class="ident">Object</span>(<span class="ident">object</span>) <span class="op">=</span> <span class="ident">value</span> {
-            <span class="kw">if</span> <span class="ident">object</span>.<span class="ident">borrow</span>().<span class="ident">is_array</span>() {
-                <span class="kw">let</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">i32</span>::<span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">get_field</span>(<span class="string">&quot;length&quot;</span>)) {
-                    <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">Value</span>::<span class="ident">Undefined</span>, <span class="ident">Value</span>::<span class="ident">Undefined</span>),
-                    <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">value</span>.<span class="ident">get_field</span>(<span class="string">&quot;0&quot;</span>), <span class="ident">Value</span>::<span class="ident">Undefined</span>),
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">value</span>.<span class="ident">get_field</span>(<span class="string">&quot;0&quot;</span>), <span class="ident">value</span>.<span class="ident">get_field</span>(<span class="string">&quot;1&quot;</span>)),
-                };
-                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">key</span>, <span class="ident">value</span>));
+            <span class="kw">if</span> <span class="ident">object</span>.<span class="ident">is_array</span>() {
+                <span class="kw">let</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="op">=</span>
+                    <span class="kw">match</span> <span class="ident">value</span>.<span class="ident">get_field</span>(<span class="string">&quot;length&quot;</span>, <span class="ident">context</span>)<span class="question-mark">?</span>.<span class="ident">as_number</span>().<span class="ident">unwrap</span>() <span class="kw">as</span> <span class="ident">i32</span> {
+                        <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">Value</span>::<span class="ident">Undefined</span>, <span class="ident">Value</span>::<span class="ident">Undefined</span>),
+                        <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">value</span>.<span class="ident">get_field</span>(<span class="string">&quot;0&quot;</span>, <span class="ident">context</span>)<span class="question-mark">?</span>, <span class="ident">Value</span>::<span class="ident">Undefined</span>),
+                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (
+                            <span class="ident">value</span>.<span class="ident">get_field</span>(<span class="string">&quot;0&quot;</span>, <span class="ident">context</span>)<span class="question-mark">?</span>,
+                            <span class="ident">value</span>.<span class="ident">get_field</span>(<span class="string">&quot;1&quot;</span>, <span class="ident">context</span>)<span class="question-mark">?</span>,
+                        ),
+                    };
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>((<span class="ident">key</span>, <span class="ident">value</span>)));
             }
         }
-        <span class="prelude-val">None</span>
-    }
-
-    <span class="doccomment">/// Create a new map</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">make_map</span>(<span class="ident">this</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span>, <span class="ident">args</span>: <span class="kw-2">&amp;</span>[<span class="ident">Value</span>], <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Interpreter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResultValue</span> {
-        <span class="comment">// Make a new Object which will internally represent the Array (mapping</span>
-        <span class="comment">// between indices and values): this creates an Object with no prototype</span>
-
-        <span class="comment">// Set Prototype</span>
-        <span class="kw">let</span> <span class="ident">prototype</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">realm</span>.<span class="ident">global_obj</span>.<span class="ident">get_field</span>(<span class="string">&quot;Map&quot;</span>).<span class="ident">get_field</span>(<span class="ident">PROTOTYPE</span>);
-
-        <span class="ident">this</span>.<span class="ident">as_object_mut</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;this is array object&quot;</span>)
-            .<span class="ident">set_prototype</span>(<span class="ident">prototype</span>);
-        <span class="comment">// This value is used by console.log and other routines to match Object type</span>
-        <span class="comment">// to its Javascript Identifier (global constructor method name)</span>
-
-        <span class="comment">// add our arguments in</span>
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">args</span>.<span class="ident">len</span>() {
-            <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">OrderedMap</span>::<span class="ident">new</span>(),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">args</span>[<span class="number">0</span>] {
-                <span class="ident">Value</span>::<span class="ident">Object</span>(<span class="ident">object</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>.<span class="ident">borrow</span>();
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>) <span class="op">=</span> <span class="ident">object</span>.<span class="ident">as_map_ref</span>().<span class="ident">cloned</span>() {
-                        <span class="ident">map</span>
-                    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">object</span>.<span class="ident">is_array</span>() {
-                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">OrderedMap</span>::<span class="ident">new</span>();
-                        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">i32</span>::<span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="ident">args</span>[<span class="number">0</span>].<span class="ident">get_field</span>(<span class="string">&quot;length&quot;</span>));
-                        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">len</span> {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">args</span>[<span class="number">0</span>].<span class="ident">get_field</span>(<span class="ident">i</span>.<span class="ident">to_string</span>());
-                            <span class="kw">let</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="op">=</span> <span class="self">Self</span>::<span class="ident">get_key_value</span>(<span class="ident">val</span>).<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-                                <span class="ident">ctx</span>.<span class="ident">construct_type_error</span>(
-                                    <span class="string">&quot;iterable for Map should have array-like objects&quot;</span>,
-                                )
-                            })<span class="question-mark">?</span>;
-                            <span class="ident">map</span>.<span class="ident">insert</span>(<span class="ident">key</span>, <span class="ident">value</span>);
-                        }
-                        <span class="ident">map</span>
-                    } <span class="kw">else</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ctx</span>.<span class="ident">construct_type_error</span>(
-                            <span class="string">&quot;iterable for Map should have array-like objects&quot;</span>,
-                        ));
-                    }
-                }
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(
-                        <span class="ident">ctx</span>.<span class="ident">construct_type_error</span>(<span class="string">&quot;iterable for Map should have array-like objects&quot;</span>)
-                    )
-                }
-            },
-        };
-
-        <span class="comment">// finally create length property</span>
-        <span class="self">Self</span>::<span class="ident">set_size</span>(<span class="ident">this</span>, <span class="ident">data</span>.<span class="ident">len</span>());
-
-        <span class="ident">this</span>.<span class="ident">set_data</span>(<span class="ident">ObjectData</span>::<span class="ident">Map</span>(<span class="ident">data</span>));
-
-        <span class="prelude-val">Ok</span>(<span class="ident">this</span>.<span class="ident">clone</span>())
-    }
-
-    <span class="doccomment">/// Initialise the `Map` object on the global object.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">init</span>(<span class="ident">interpreter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Interpreter</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Value</span>) {
-        <span class="kw">let</span> <span class="ident">global</span> <span class="op">=</span> <span class="ident">interpreter</span>.<span class="ident">global</span>();
-        <span class="kw">let</span> <span class="ident">_timer</span> <span class="op">=</span> <span class="ident">BoaProfiler</span>::<span class="ident">global</span>().<span class="ident">start_event</span>(<span class="self">Self</span>::<span class="ident">NAME</span>, <span class="string">&quot;init&quot;</span>);
-
-        <span class="comment">// Create prototype</span>
-        <span class="kw">let</span> <span class="ident">prototype</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">new_object</span>(<span class="prelude-val">Some</span>(<span class="ident">global</span>));
-
-        <span class="ident">make_builtin_fn</span>(<span class="self">Self</span>::<span class="ident">set</span>, <span class="string">&quot;set&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">prototype</span>, <span class="number">2</span>, <span class="ident">interpreter</span>);
-        <span class="ident">make_builtin_fn</span>(<span class="self">Self</span>::<span class="ident">delete</span>, <span class="string">&quot;delete&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">prototype</span>, <span class="number">1</span>, <span class="ident">interpreter</span>);
-        <span class="ident">make_builtin_fn</span>(<span class="self">Self</span>::<span class="ident">get</span>, <span class="string">&quot;get&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">prototype</span>, <span class="number">1</span>, <span class="ident">interpreter</span>);
-        <span class="ident">make_builtin_fn</span>(<span class="self">Self</span>::<span class="ident">clear</span>, <span class="string">&quot;clear&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">prototype</span>, <span class="number">0</span>, <span class="ident">interpreter</span>);
-        <span class="ident">make_builtin_fn</span>(<span class="self">Self</span>::<span class="ident">has</span>, <span class="string">&quot;has&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">prototype</span>, <span class="number">1</span>, <span class="ident">interpreter</span>);
-        <span class="ident">make_builtin_fn</span>(<span class="self">Self</span>::<span class="ident">for_each</span>, <span class="string">&quot;forEach&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">prototype</span>, <span class="number">1</span>, <span class="ident">interpreter</span>);
-
-        <span class="kw">let</span> <span class="ident">map_object</span> <span class="op">=</span> <span class="ident">make_constructor_fn</span>(
-            <span class="self">Self</span>::<span class="ident">NAME</span>,
-            <span class="self">Self</span>::<span class="ident">LENGTH</span>,
-            <span class="self">Self</span>::<span class="ident">make_map</span>,
-            <span class="ident">global</span>,
-            <span class="ident">prototype</span>,
-            <span class="bool-val">true</span>,
-            <span class="bool-val">false</span>,
-        );
-
-        (<span class="self">Self</span>::<span class="ident">NAME</span>, <span class="ident">map_object</span>)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 }
 </pre></div>
